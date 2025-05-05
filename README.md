@@ -1,7 +1,7 @@
 # Joshua Paik Python Coding Sample
-For this project, I have written codes in Python that cleans and performs basic analysis on time series data.
+The objective of the project was to write functions that can be used to clean and analyze different types of time series data. Being able to perform those two tasks on different types of time series data was a key to this project.
 
-Descriptions of files in this repo:
+Descriptions of files in this repo are:
   1) File titled "data_clean.py" contains a series of codes that cleans time series data.
   2) File titled "data_analysis.py" contains a series of codes that performs time series analysis.
   3) File titled "test.py" is where I have implemented codes that are on both files described above by using sample data of "TS_sample_data_euro(Sheet1)-2.csv" and "TS_sample_data_dollar(Sheet1)-2.csv"
@@ -28,3 +28,10 @@ Another important element of this function is when the user is deciding between 
 
 Final part of this function that I want to highlight is that it lets the user decide their own threshold for running all outlier tests. I felt that this was necessary since the ideal threshold when running outlier tests varies by context. However, for all tests, I have written a typical threshold used.
 
+check_duplicates(target_file, date_col_name)
+-----
+This function is straightforward. However, I do want to point out that this function gives the user the choice to remove duplicates with the same date entries as opposed to removing them without asking. This choice was made because these type of duplicates are likely to arise from misinterpretation. For example, if data collecting frequency is different throughout different data points, then there is a possibility that these duplicates aren’t actually duplicates and they are data collected in different time frames that just weren’t specified in the data (ex: 1pm of 1/1/2025 and 2pm of 1/1/2025, but they were both recorded as 1/1/2025).
+
+normalize_data(target_file, date_col_name)
+-----
+This is another straightforward function. But, I just want to say that just like the function check_outliers, this function runs normality tests to help the user’s decision between using min-max scaling or Z-score normalization to normalize their data.
