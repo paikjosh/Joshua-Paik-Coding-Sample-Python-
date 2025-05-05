@@ -395,7 +395,6 @@ def check_outliers(target_file, date_col_name):
         print('First, bar garph that show mahalanobis distance of each data points is plotted on the right hand side of this screen.',
               end='\n')
         print('For your reference, normality tests will be conducted to determine if your data is normal or not.', end='\n')
-        uf.normal_test(target_file=target_file, date_col_name=date_col_name, alpha=0.05)
 
         data = target_file.drop(date_col_name, axis=1)
 
