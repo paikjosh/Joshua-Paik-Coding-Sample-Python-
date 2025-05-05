@@ -8,7 +8,7 @@ Descriptions of files in this repo are:
 
 All Python files in this repo contain descriptions of codes that I’ve written. However, all of them lack my thought process that went into writing those codes. Hence, I’ll use the space below to talk about that. 
 
-<code style="color : darkorange">convert_data_type(target_file)</code>
+<code style="color : red">convert_data_type(target_file)</code>
 -----
 When the data is initially imported to Python, all entries are type string since they contain at least one symbol. But they must be in numerical form in order to clean and perform analysis. So, all non-date columns must be in type string, while date columns must convert to type datetime. That function was written to achieve such a task.
 
