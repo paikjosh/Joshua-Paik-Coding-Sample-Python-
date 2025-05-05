@@ -14,16 +14,18 @@ import utility_functions as uf
 #          2nd, convert date inputs into datetime
 # Example: $100,000.01 -> 100,000.01
 def convert_input(target_file, date_col_name):
+    target_file_df = pd.DataFrame(target_file)
+
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
 
     for i in non_date_col_list:
         # removing all characters except for dot and numbers in columns that aren't the date column
-        target_file[i] = target_file[i].replace(r'[^\d.]', '', regex=True).astype(float)
+        target_file_df[i] = target_file_df[i].replace(r'[^\d.]', '', regex=True).astype(float)
 
-    target_file[date_col_name] = pd.to_datetime(target_file[date_col_name], format='%m/%d/%Y')
+    target_file_df[date_col_name] = pd.to_datetime(target_file_df[date_col_name], format='%m/%d/%Y')
 
-    return target_file
+    return target_file_df
 
 
 
