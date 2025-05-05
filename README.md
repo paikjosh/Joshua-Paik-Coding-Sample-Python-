@@ -24,3 +24,7 @@ check_outliers(target_file, date_col_name)
 -----
 This function was to detect outliers. When doing this, I thought it was a good idea to first create a visual representation of data before conducting formal outlier tests. This was because I thought making visual representation was a more intuitive way of understanding the distribution of the data and how certain data points fall into that distribution. So, the purpose of this was to allow for the user to first find outliers by looking at visual representation of their data, then they can conduct formal tests if they still feel the need to do that after looking at the visual representation.
 
+Another important element of this function is when the user is deciding between Z-score and IQR tests to identify outliers, the function runs a normality test to help the user's decision. Generally, the Z-score test is ideal if data is normal and IQR test is ideal otherwise.
+
+Final part of this function that I want to highlight is that it lets the user decide their own threshold for running all outlier tests. I felt that this was necessary since the ideal threshold when running outlier tests varies by context. However, for all tests, I have written a typical threshold used.
+
