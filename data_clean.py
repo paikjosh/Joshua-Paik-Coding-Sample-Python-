@@ -116,8 +116,9 @@ def out_z_score(target_file, date_col_name):
     non_date_col_list.remove(date_col_name)
 
     print(
-        'Type an absolute value of a threshold for Z-score (ex: 3 should be entered if you want threshold to be ±3):',
+        'Type an absolute value of a threshold for Z-score (ex: 3 should be entered if you want threshold to be ±3).',
         end='\n')
+    print('Commonly used thresholds are ±2 and ±3.', end='\n')
     # taking user input for threshold
     while True:
         threshold_input = ''
@@ -156,7 +157,7 @@ def out_z_score(target_file, date_col_name):
 
             if outlier_dec_input == 'yes':
                 print(
-                    'Type row index or indices of outlier that you wish to remove. Each indices must to separated by a comma. ',
+                    'Type row index or indices of outlier that you wish to remove. Each indices must to separated by a comma ',
                     end='\n')
                 print('Note that row index is located at the left most area of outliers displayed above.', end='\n')
 
@@ -182,15 +183,32 @@ def out_iqr(target_file, date_col_name):
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
 
-    for i in non_date_col_list:
-        q1 = target_file[i].quantile(0.25)
-        q3 = target_file[i].quantile(0.75)
-        iqr = q3 - q1
-
-        lower_bound = q1 - 1.5 * iqr
-        upper_bound = q3 + 1.5 * iqr
+    print(
+        'Type a threshold for IQR test.',
+        end='\n')
+    print('Commonly used thresholds is 1,5.', end='\n')
+    # taking user input for threshold
+    while True:
+        iqr_threshold_input = ''
+        del iqr_threshold_input
+        iqr_threshold_input = input()
+        iqr_threshold_input = iqr_threshold_input.replace(' ', '')
+        try:
+            iqr_threshold_input = float(m_threshold_input)
+        except ValueError:
+            print('Invalid input. Please type a real number.', end='\n')
         # outlier test
-        outlier.append(target_file[(target_file[i] < lower_bound) | (target_file[i] > upper_bound)])
+        else:
+            for i in non_date_col_list:
+                q1 = target_file[i].quantile(0.25)
+                q3 = target_file[i].quantile(0.75)
+                iqr = q3 - q1
+
+                lower_bound = q1 - iqr_threshold_input * iqr
+                upper_bound = q3 + iqr_threshold_input * iqr
+
+                outlier.append(target_file[(target_file[i] < lower_bound) | (target_file[i] > upper_bound)])
+            break
     # giving user the choice to remove outliers if they exist
     if outlier:
         print('Outlier found using IQR method: ', end='\n')
@@ -270,8 +288,8 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
 
     data['Mahalanobis distance'] = m_dist
 
-    print('Type a threshold for Mahalanobis Distance (note that chi-square value calculated', end = '\n')
-    print('using significance level (alpha) of ', alpha, ' is ', chi_square, ')', sep = '', end = '\n')
+    print('Type a threshold for Mahalanobis Distance', end = '\n')
+    print('Commonly used Threshold is chi-square value, which is', chi_square, 'using significance level of',alpha, sep = '', end = '\n')
     print('You can type "chi2" is you want your threshold to be the chi-square value calculated above', end = '\n')
     # taking user input for threshold
     while True:
