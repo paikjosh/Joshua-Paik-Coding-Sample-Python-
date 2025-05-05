@@ -6,7 +6,10 @@ Descriptions of files in this repo are:
   2) File titled "data_analysis.py" contains a series of codes that performs time series analysis.
   3) File titled "test.py" is where I have implemented codes that are on both files described above by using sample data of "TS_sample_data_euro(Sheet1)-2.csv" and "TS_sample_data_dollar(Sheet1)-2.csv"
 
-All Python files in this repo contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further about. 
+I have made a Youtube video in which I implement all functions that I have written. The link to that video:
+You can also try implement functions yourself.
+
+All Python files in this repo contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further about.
 
 <code style="color : red">convert_data_type(target_file)</code>
 -----
