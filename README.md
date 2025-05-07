@@ -11,9 +11,7 @@ You can also try implement functions yourself.
 
 All Python files in this repo contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further about.
 
-$${\color{blue}Blue}$$
-
-<code style="color : red">convert_data_type(target_file)</code>
+$${\color{red}convert_data_type(target_file)}$$
 -----
 When the data is initially imported to Python, all entries are type string since they contain at least one symbol. But they must be in numerical form in order to clean and perform analysis. So, all non-date columns must be in type string, while date columns must convert to type datetime. That function was written to achieve such a task.
 
