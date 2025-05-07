@@ -86,9 +86,12 @@ def check_for_missing(target_file):
                     'Type row index or indices of input that you wish to remove.',
                     end='\n')
                 print('Each indices must to separated by a comma', end = '\n')
-                print('Row index is located at left side missing values displayed above', end='\n')
+                print('Row indices are located at the left side of missing values displayed above', end='\n')
                 target_file = uf.del_file_data(target_file=target_file)
                 target_file.reset_index(drop=True, inplace=True)
+
+                print('Data after removing: ', end='\n')
+                print(target_file, end='\n\n')
                 break
             elif user_input == 'no':
                 break
@@ -97,9 +100,6 @@ def check_for_missing(target_file):
 
     else:
         print('No missing data found.', end='\n')
-
-    print('Data after removing: ', end='\n')
-    print(target_file, end='\n\n')
 
     return target_file
 
@@ -121,19 +121,19 @@ def out_z_score(target_file, date_col_name):
     print('Commonly used thresholds are ±2 and ±3.', end='\n')
     # taking user input for threshold
     while True:
-        threshold_input = ''
-        del threshold_input
-        threshold_input = input()
-        threshold_input = threshold_input.replace(' ', '')
+        z_threshold_input = ''
+        del z_threshold_input
+        z_threshold_input = input()
+        z_threshold_input = z_threshold_input.replace(' ', '')
 
         try:
-            threshold_input = int(threshold_input)
+            z_threshold_input = int(z_threshold_input)
         except ValueError:
             print('Invalid threshold input. Please type again.')
         # outlier test based on user provided threshold
         else:
             z_score = stats.zscore(target_file[non_date_col_list])
-            outlier = target_file[np.abs(z_score) > threshold_input]
+            outlier = target_file[np.abs(z_score) > z_threshold_input]
             break
     # appending Z-score to data
     for i in range(0, len(outlier)):
@@ -144,7 +144,7 @@ def out_z_score(target_file, date_col_name):
     outlier['Z-score'] = outlier_z
     # giving user the choice to remove outliers if they exist
     if outlier.empty == False:
-        print('Outlier found using Z-score method: ', end='\n')
+        print('Outlier found using Z-score method with threshold of ±', z_threshold_input, ':', sep='', end='\n')
         print(outlier, end='\n')
         print('Do you wish to remove any outliers identified? Type yes or no', end='\n')
 
@@ -168,7 +168,7 @@ def out_z_score(target_file, date_col_name):
             else:
                 print('Invalid input. Please type yes or no.')
     else:
-        print('No outlier in this data', end='\n\n')
+        print('No outlier in this data with threshold of', z_threshold_input, end='\n\n')
 
     return target_file
 
@@ -210,9 +210,9 @@ def out_iqr(target_file, date_col_name):
             break
     # giving user the choice to remove outliers if they exist
     if outlier.empty == False:
-        print('Outlier found using IQR method: ', end='\n')
+        print('Outlier found using IQR method with threshold of ', iqr_threshold_input, ':', sep='', end='\n')
         print(outlier, end='\n')
-        print('Do you wish to remove any outliers identified? Type yes or no', end='\n')
+        print('Do you wish to remove any outliers identified? Type yes or no.', end='\n')
 
         while True:
             outlier_dec_input = ''
@@ -234,7 +234,7 @@ def out_iqr(target_file, date_col_name):
                 print('Invalid input. Please type yes or no.')
         target_file.reset_index(drop=True, inplace=True)
     else:
-        print('No outlier in this data', end='\n\n')
+        print('No outlier in this data with threshold of', iqr_threshold_input, end='\n\n')
 
     return target_file
 
@@ -286,7 +286,7 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
     data['Mahalanobis distance'] = m_dist
 
     print('Type a threshold for Mahalanobis Distance', end = '\n')
-    print('Commonly used Threshold is chi-square value, which is', chi_square, 'using significance level of',alpha, sep = '', end = '\n')
+    print('Commonly used Threshold is chi-square value, which is', chi_square, 'using significance level of',alpha, end = '\n')
     print('You can type "chi2" is you want your threshold to be the chi-square value calculated above', end = '\n')
     # taking user input for threshold
     while True:
@@ -306,7 +306,7 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
             break
     # giving user the choice to remove outliers if they exist
     if outliers.empty == False:
-        print('Outlier found using mahalanobis method: ', end='\n')
+        print('Outlier found using mahalanobis method with threshold of', m_threshold_input, ':', sep='', end='\n')
         print(outliers, end='\n')
 
         print('Do you wish to remove any outliers identified? Type yes or no.', end='\n')
@@ -330,7 +330,7 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
                 print('Invalid input. Please type yes or no.')
         target_file.reset_index(drop=True, inplace=True)
     else:
-        print('No outlier in this data', end='\n\n')
+        print('No outlier in this data with threshold of', m_threshold_input, end='\n')
 
     return target_file
 
@@ -389,9 +389,8 @@ def check_outliers(target_file, date_col_name):
     # plotting Mahalanobis distance when there are more than 2 variables in the data
     elif len(target_file.columns) > 2:
         print('Identifying outliers:', end='\n')
-        print('First, bar garph that show mahalanobis distance of each data points is plotted on the right hand side of this screen.',
+        print('First, bar garph that show Mahalanobis distance of each data points is plotted on the right hand side of this screen.',
               end='\n')
-        print('For your reference, normality tests will be conducted to determine if your data is normal or not.', end='\n')
 
         data = target_file.drop(date_col_name, axis=1)
 
@@ -501,7 +500,7 @@ def arrange_file_date(target_file, target_col_name):
 #          2nd, check for duplicates that have the same data value, then gives a chance to th user regarding removing
 #          one of them.
 def check_duplicates(target_file, date_col_name):
-    print('Checking for duplicates.', end = '\n')
+    print('Checking for duplicates:', end = '\n')
 
     # 1st dealing with duplicates that have the same value throughout all columns
     all_val_dup = target_file.duplicated()
@@ -517,8 +516,12 @@ def check_duplicates(target_file, date_col_name):
     if any(all_val_dup): # if there exists at least one True in all_val_dup
         print('Exact duplicates: ', end = '\n')
         print(target_file[all_val_dup], end = '\n')
-        print('All duplicates above will be removed', end = '\n\n')
+        print('All duplicates above will be removed', end = '\n')
         target_file.drop(index=all_val_dup_index, inplace=True)
+        target_file.reset_index(drop=True, inplace=True)
+
+        print('Data after taking care of exact duplicates:', end='\n')
+        print(target_file)
     else:
         no_all_val_dup_indicator = True
 
@@ -539,6 +542,10 @@ def check_duplicates(target_file, date_col_name):
             if date_dup_remove_input == 'yes':
                 print('Type in row index of data that you wish to remove', end = '\n')
                 target_file = uf.del_file_data(target_file=target_file)
+                target_file.reset_index(drop=True, inplace=True)
+
+                print('Data after taking care of date duplicates:', end='\n')
+                print(target_file)
                 break
             elif date_dup_remove_input == 'no':
                 break
@@ -549,11 +556,6 @@ def check_duplicates(target_file, date_col_name):
 
     if no_all_val_dup_indicator and no_date_val_dup_indicator:
         print('No duplicates in this data.', end = '\n')
-
-    target_file.reset_index(drop=True, inplace=True)
-
-    print('Data after taking care of duplicates:', end='\n')
-    print(target_file)
 
     return target_file
 
