@@ -95,7 +95,7 @@ def arima(target_file,target_col_name, steps):
 #
 #           2nd, target_file must be stationarity.
 # Modifies: None.
-# Effects: Performs VAR and graph the result.
+# Effects: Performs VAR using OLS and graph the result.
 def var(target_file, steps):
     from statsmodels.tsa.api import VAR
 
