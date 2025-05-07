@@ -4,11 +4,13 @@ import utility_functions as uf
 import data_clean as dc
 import data_analysis as da
 
-# cleaning data
+# Cleaning data
 
 print('Cleaning data', end='\n\n')
 
-# importing euro file
+# cleaning euro file
+print('Cleaning euro file:', end='\n')
+
 euro_file_name = '/Users/joshpaik/Downloads/TS_sample_data_euro(Sheet1)-2.csv'
 
 try:
@@ -22,7 +24,6 @@ except UnicodeDecodeError:
 print('Original data: ', end='\n')
 print(euro_file, end='\n\n')
 
-# cleaning euro file
 euro_file_df = dc.convert_input(target_file=euro_file, date_col_name='Date') # note that convert_input converts
 print('Data after converting entries data type: ', end='\n')                 # target_file into dataframe
 print(euro_file_df, end='\n\n')
@@ -40,10 +41,11 @@ print('')
 
 euro_file_df = dc.normalize_data(target_file=euro_file_df, date_col_name='Date')
 print('')
+print('')
 
+# cleaning dollar file
+print('Cleaning dollar file:', end='\n')
 
-
-# importing dollar file
 dollar_file_name = '/Users/joshpaik/Downloads/TS_sample_data_dollar(Sheet1)-2.csv'
 
 try:
@@ -54,7 +56,6 @@ except UnicodeDecodeError:
     except UnicodeDecodeError:
         dollar_file = pd.read_csv(dollar_file_name, encoding='cp1252')
 
-# cleaning dollar file
 print('Original data: ', end='\n')
 print(dollar_file, end='\n\n')
 
@@ -65,6 +66,7 @@ print(dollar_file_df, end='\n\n')
 dollar_file_df = dc.check_for_missing(target_file=dollar_file_df)
 
 # estimating value for missing sale amount by taking average
+
 oct_sale = []
 for i in range(0, len(dollar_file)):
     if (dollar_file_df['Date'].dt.month[i] == 10 and
@@ -92,7 +94,7 @@ print('')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------
 # Analyzing data
-
+print('----------------------------------------------------------------------------------------------------------------------------------------------', end='\n')
 print('Analyzing data', end='\n\n')
 
 # comparing two datasets
