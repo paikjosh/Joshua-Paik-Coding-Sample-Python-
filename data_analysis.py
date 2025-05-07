@@ -4,13 +4,12 @@ from scipy import stats
 import matplotlib.pyplot as plt
 import utility_functions as uf
 
-# Looking at average and std of data containd in a specfic column
 
 # Requires: All other columns except for a column that contains data should either be in type float or int.
 # Modifies: target_file.
 # Effects: Show average and standard deviation of all columns except for the date column
 def stat_measures(target_file, target_file_name, date_col_name):
-    print('Statistical measures for', target_file_name, end = '\n')
+    print('Statistical measures for ', target_file_name,':', sep='', end = '\n')
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
     for i in non_date_col_list:
