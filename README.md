@@ -13,7 +13,6 @@ All Python files in this repo contain descriptions of functions that I’ve writ
 
 
 $${\color{red}convert \textunderscore data \textunderscore type(target \textunderscore file)}$$
-convert_data_type(target_file)
 -----
 When the data is initially imported to Python, all entries are type string since they contain at least one symbol. But they must be in numerical form in order to clean and perform analysis. So, all non-date columns must be in type string, while date columns must convert to type datetime. That function was written to achieve such a task.
 
