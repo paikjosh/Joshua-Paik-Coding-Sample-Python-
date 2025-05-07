@@ -26,7 +26,7 @@ $${\color{red}check \textunderscore for \textunderscore missing(target \textunde
 The idea behind this function was to first check if missing data exists in any parts of the data, then give the user a chance to delete identified missing values. Giving the user a choice to deal with missing values is an important part of this function since removing missing values might not be the best way to deal with them. For example, if one can reasonably assume that a value is missing at random (MAR), then it is a good idea to perform an imputation to deal with that missing value.
 
 
-$${\color{red}check \textunderscore outliers(target \textunderscore file, /space date \textunderscore col \textunderscore name)}$$
+$${\color{red}check \textunderscore outliers(target \textunderscore file, \space date \textunderscore col \textunderscore name)}$$
 check_outliers(target_file, date_col_name)
 -----
 This function was to detect outliers. When doing this, I thought it was a good idea to first create a visual representation of data before conducting formal outlier tests. This was because I thought making visual representation was a more intuitive way of understanding the distribution of the data and how certain data points fall into that distribution. So, the purpose of this was to allow for the user to first find outliers by looking at visual representation of their data, then they can conduct formal tests if they still feel the need to do that after looking at the visual representation.
