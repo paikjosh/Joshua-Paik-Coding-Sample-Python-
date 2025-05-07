@@ -112,7 +112,7 @@ def check_for_missing(target_file):
 # user regarding removing identified outliers.
 def out_z_score(target_file, date_col_name):
     outlier_z = []
-    non_date_col_list = arget_file.columns.values.tolist()
+    non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
 
     print(
@@ -179,14 +179,13 @@ def out_z_score(target_file, date_col_name):
 # Effects: Identify outliers in a data using IQR method with threshold given by the user and give a chance to the
 # user regarding removing identified outliers.
 def out_iqr(target_file, date_col_name):
-    outlier = []
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
 
     print(
         'Type a threshold for IQR test.',
         end='\n')
-    print('Commonly used thresholds is 1,5.', end='\n')
+    print('Commonly used thresholds is 1.5.', end='\n')
     # taking user input for threshold
     while True:
         iqr_threshold_input = ''
@@ -194,7 +193,7 @@ def out_iqr(target_file, date_col_name):
         iqr_threshold_input = input()
         iqr_threshold_input = iqr_threshold_input.replace(' ', '')
         try:
-            iqr_threshold_input = float(m_threshold_input)
+            iqr_threshold_input = float(iqr_threshold_input)
         except ValueError:
             print('Invalid input. Please type a real number.', end='\n')
         # outlier test
@@ -207,10 +206,10 @@ def out_iqr(target_file, date_col_name):
                 lower_bound = q1 - iqr_threshold_input * iqr
                 upper_bound = q3 + iqr_threshold_input * iqr
 
-                outlier.append(target_file[(target_file[i] < lower_bound) | (target_file[i] > upper_bound)])
+                outlier = target_file[(target_file[i] < lower_bound) | (target_file[i] > upper_bound)]
             break
     # giving user the choice to remove outliers if they exist
-    if outlier:
+    if outlier.empty == False:
         print('Outlier found using IQR method: ', end='\n')
         print(outlier, end='\n')
         print('Do you wish to remove any outliers identified? Type yes or no', end='\n')
@@ -274,8 +273,6 @@ def mahalanobis_dist(data, mean, cov):
 # Effects: Determine outliers using Mahalanobis distance with threshold for Mahalanobis distance given by the user.
 #          Then, gives a choice to users regarding removing identified outliers.
 def out_mahalanobis_dist(target_file, date_col_name, alpha):
-    outliers = []
-
     data = target_file.drop(date_col_name, axis=1)
 
     mean = data.mean().values
@@ -446,7 +443,7 @@ def check_outliers(target_file, date_col_name):
         stat_method_dec_input = stat_method_dec_input.replace(' ', '')
         # running test in 2 variables case
         if stat_method_dec_input == 'yes' and len(target_file.columns) == 2:
-            print('Choose and type in a desired method (you may type IQR for Interquartile Range):', end = '\n')
+            print('Choose and type in a desired method (you may type iqr for Interquartile Range):', end = '\n')
 
             while True:
                 outlier_method_input = ''
