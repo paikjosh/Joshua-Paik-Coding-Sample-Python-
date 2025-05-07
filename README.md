@@ -27,7 +27,6 @@ The idea behind this function was to first check if missing data exists in any p
 
 
 $${\color{red}check \textunderscore outliers(target \textunderscore file, \space date \textunderscore col \textunderscore name)}$$
-check_outliers(target_file, date_col_name)
 -----
 This function was to detect outliers. When doing this, I thought it was a good idea to first create a visual representation of data before conducting formal outlier tests. This was because I thought making visual representation was a more intuitive way of understanding the distribution of the data and how certain data points fall into that distribution. So, the purpose of this was to allow for the user to first find outliers by looking at visual representation of their data, then they can conduct formal tests if they still feel the need to do that after looking at the visual representation.
 
@@ -36,11 +35,11 @@ Another important element of this function is when the user is deciding between 
 Final part of this function that I want to highlight is that it lets the user decide their own threshold for running all outlier tests. I felt that this was necessary since the ideal threshold when running outlier tests varies by context. However, for all tests, I have written a typical threshold used.
 
 
-check_duplicates(target_file, date_col_name)
+$${\color{red}check \textunderscore duplicates(target \textunderscore file, \space date \textunderscore col \textunderscore name)}$$
 -----
 This function is straightforward. However, I do want to point out that this function gives the user the choice to remove duplicates with the same date entries as opposed to removing them without asking. This choice was made because these type of duplicates are likely to arise from misinterpretation. For example, if data collecting frequency is different throughout different data points, then there is a possibility that these duplicates aren’t actually duplicates and they are data collected in different time frames that just weren’t specified in the data (ex: 1pm of 1/1/2025 and 2pm of 1/1/2025, but they were both recorded as 1/1/2025).
 
 
-normalize_data(target_file, date_col_name)
+$${\color{red}normalize \textunderscore data(target \textunderscore file, \space date \textunderscore col \textunderscore name)}$$
 -----
 This is another straightforward function. But, I just want to say that just like the function check_outliers, this function runs normality tests to help the user’s decision between using min-max scaling or Z-score normalization to normalize their data.
