@@ -2,9 +2,10 @@
 The objective of the project was to write functions in Python that can be used to clean and analyze different types of time series data. Being able to perform those two tasks on different types of time series data was a key to this project.
 
 Descriptions of files in this repo are:
-  1) File titled "data_clean.py" contains a series of codes that cleans time series data.
-  2) File titled "data_analysis.py" contains a series of codes that performs time series analysis.
-  3) File titled "test.py" is where I have implemented codes that are on both files described above by using sample data of "euro_file.csv"
+  1) File titled "data_clean.py" contains functions that clean time series data.
+  2) File titled "data_analysis.py" contains functions that perform time series analysis.
+  3) File titled "utility_functions.py" contains utility functions used throughout "data_clean.py" and "data_analysis.py".
+  4) File titled "test.py" is where I have implemented functionss that are on both files described above by using sample data of "euro_file.csv". 
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
