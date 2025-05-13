@@ -9,9 +9,9 @@ import utility_functions as uf
 
 # Requires: All inputs of the data should be in type str.
 # Modifies: target_file.
-# Effects: 1st, remove all unnecessary characters in all non-date inputs of the data, then convert them into type float
+# Effects: 1st, removes all unnecessary characters in all non-date inputs of the data, then convert them into type float
 #
-#          2nd, convert date inputs into datetime
+#          2nd, converts date inputs into datetime
 # Example: $100,000.01 -> 100,000.01
 def convert_input(target_file, date_col_name):
     target_file_df = pd.DataFrame(target_file)
@@ -67,12 +67,13 @@ def convert_money_input_to_str(target_file, date_col_name, currency_unit):
 # Effects: Checks for all missing inputs on target_file, then gives a chance for the user to remove the missing data.
 def check_for_missing(target_file):
     # checking for missing data
-    nan_row = target_file[target_file.isnull().any(axis = 1)]
+    print('Checking for missing data...', end='\n')
+    nan_row = target_file[target_file.isnull().any(axis=1)]
     # giving choice to remove missing inputs if they exist
     if len(nan_row) >= 1:
-        print('Row/s that contain missing value:', end = '\n')
+        print('Row/s that contain missing value:', end='\n')
         print(nan_row)
-        print("Do you wish to remove any missing data? Type yes or no.", end = '\n')
+        print("Do you wish to remove any missing data? Type yes or no.", end='\n')
 
         while True:
             user_input = ''
@@ -85,7 +86,7 @@ def check_for_missing(target_file):
                 print(
                     'Type row index or indices of input that you wish to remove.',
                     end='\n')
-                print('Each indices must to separated by a comma', end = '\n')
+                print('Each indices must to separated by a comma', end='\n')
                 print('Row indices are located at the left side of missing values displayed above', end='\n')
                 target_file = uf.del_file_data(target_file=target_file)
                 target_file.reset_index(drop=True, inplace=True)
@@ -100,6 +101,74 @@ def check_for_missing(target_file):
 
     else:
         print('No missing data found.', end='\n')
+
+    return target_file
+
+#----------------------------------------------------------------------------------------------------------------------------------------------
+
+# Requires: none
+# Modifies: Possibly target_file.
+# Effects: 1st, check for duplicates that have the same value throughout all columns and remove one them right away.
+#
+#          2nd, check for duplicates that have the same data value, then gives a chance to th user regarding removing
+#          one of them.
+def check_duplicates(target_file, date_col_name):
+    print('Checking for duplicates...', end='\n')
+
+    # 1st dealing with duplicates that have the same value throughout all columns
+    all_val_dup = target_file.duplicated()
+    all_val_dup_index = []
+    no_all_val_dup_indicator = False
+
+    # obtaining row index for duplicates.
+    for i in range(0, len(all_val_dup)):
+        if all_val_dup[i]:
+            all_val_dup_index.append(i)
+
+    # removing duplicates
+    if any(all_val_dup): # if there exists at least one True in all_val_dup
+        print('Exact duplicates: ', end='\n')
+        print(target_file[all_val_dup], end='\n')
+        print('All duplicates above will be removed', end='\n')
+        target_file.drop(index=all_val_dup_index, inplace=True)
+        target_file.reset_index(drop=True, inplace=True)
+
+        print('Data after taking care of exact duplicates:', end='\n')
+        print(target_file)
+    else:
+        no_all_val_dup_indicator = True
+
+    # 2nd dealing with duplicates that has the same date.
+    date_val_dup = target_file[date_col_name].duplicated(keep=False)  # keep = False since I wish to display all
+    no_date_val_dup_indicator = False                                 # duplicated data in this case.
+
+    # giving user the choice to deal with data that has the same date if it exists
+    if any(date_val_dup):
+        print('Date duplicates: ', end='\n')
+        print(target_file[date_val_dup], end='\n')
+        print('Do you wish to remove any duplicated data above? Type yes or no.', end='\n')
+        while True:
+            date_dup_remove_input = ''
+            del date_dup_remove_input
+            date_dup_remove_input = input()
+            date_dup_remove_input = date_dup_remove_input.replace(' ', '').lower()
+            if date_dup_remove_input == 'yes':
+                print('Type in row index of data that you wish to remove', end='\n')
+                target_file = uf.del_file_data(target_file=target_file)
+                target_file.reset_index(drop=True, inplace=True)
+
+                print('Data after taking care of date duplicates:', end='\n')
+                print(target_file)
+                break
+            elif date_dup_remove_input == 'no':
+                break
+            else:
+                print('Invalid input. Type again.', end='\n')
+    else:
+        no_date_val_dup_indicator = True
+
+    if no_all_val_dup_indicator and no_date_val_dup_indicator:
+        print('No duplicates in this data.', end='\n')
 
     return target_file
 
@@ -162,6 +231,8 @@ def out_z_score(target_file, date_col_name):
                 print('Note that row index is located at the left most area of outliers displayed above.', end='\n')
 
                 target_file = uf.del_file_data(target_file=target_file)
+                print('Data after removing outliers:', end='\n')
+                print(target_file, end='\n\n')
                 break
             elif outlier_dec_input == 'no':
                 break
@@ -181,6 +252,9 @@ def out_z_score(target_file, date_col_name):
 def out_iqr(target_file, date_col_name):
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
+    non_date_col = non_date_col_list[0]
+    lower_bound = 0
+    upper_bound = 0
 
     print(
         'Type a threshold for IQR test.',
@@ -198,19 +272,22 @@ def out_iqr(target_file, date_col_name):
             print('Invalid input. Please type a real number.', end='\n')
         # outlier test
         else:
-            for i in non_date_col_list:
-                q1 = target_file[i].quantile(0.25)
-                q3 = target_file[i].quantile(0.75)
-                iqr = q3 - q1
+            q1 = target_file[non_date_col].quantile(0.25)
+            q3 = target_file[non_date_col].quantile(0.75)
+            iqr = q3 - q1
 
-                lower_bound = q1 - iqr_threshold_input * iqr
-                upper_bound = q3 + iqr_threshold_input * iqr
+            lower_bound = q1 - iqr_threshold_input * iqr
+            upper_bound = q3 + iqr_threshold_input * iqr
 
-                outlier = target_file[(target_file[i] < lower_bound) | (target_file[i] > upper_bound)]
+            outlier = target_file[(target_file[non_date_col] < lower_bound) | (target_file[non_date_col] > upper_bound)]
+
             break
+
     # giving user the choice to remove outliers if they exist
     if outlier.empty == False:
-        print('Outlier found using IQR method with threshold of ', iqr_threshold_input, ':', sep='', end='\n')
+        print('Identifying outliers IQR...', end='\n')
+        print('Using threshold of ', iqr_threshold_input, ', (lower bound, upper bound) = (', lower_bound,', ', upper_bound, ').', sep='', end='\n')
+        print('Therefore, outliers are:', end='\n')
         print(outlier, end='\n')
         print('Do you wish to remove any outliers identified? Type yes or no.', end='\n')
 
@@ -227,6 +304,8 @@ def out_iqr(target_file, date_col_name):
                       end='\n')
 
                 target_file = uf.del_file_data(target_file=target_file)
+                print('Data after removing outliers:', end='\n')
+                print(target_file, end='\n\n')
                 break
             elif outlier_dec_input == 'no':
                 break
@@ -285,9 +364,9 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
 
     data['Mahalanobis distance'] = m_dist
 
-    print('Type a threshold for Mahalanobis Distance', end = '\n')
-    print('Commonly used Threshold is chi-square value, which is', chi_square, 'using significance level of',alpha, end = '\n')
-    print('You can type "chi2" is you want your threshold to be the chi-square value calculated above', end = '\n')
+    print('Type a threshold for Mahalanobis Distance', end='\n')
+    print('Commonly used Threshold is chi-square value, which is', chi_square, 'using significance level of',alpha, end='\n')
+    print('You can type "chi2" is you want your threshold to be the chi-square value calculated above', end='\n')
     # taking user input for threshold
     while True:
         m_threshold_input = ''
@@ -322,7 +401,9 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
                 print('Note that row index is located at the left most area of outliers displayed above.',
                       end='\n')
 
-                target_file = uf.del_file_data(target_file = target_file)
+                target_file = uf.del_file_data(target_file=target_file)
+                print('Data after removing outliers:', end='\n')
+                print(target_file, end='\n\n')
                 break
             elif outlier_dec_input == 'no':
                 break
@@ -355,8 +436,8 @@ def check_outliers(target_file, date_col_name):
     # plotting 2d graph when there are only 2 variables in the data
     if len(target_file.columns) == 2:
 
-        print('Identifying outliers:', end='\n')
-        print('First, scatter plot of data is plotted on the right hand side of this screen.', end = '\n')
+        print('Identifying outliers...', end='\n')
+        print('First, scatter plot of data is plotted on the right hand side of this screen.', end='\n')
 
         sal_col = non_date_col_list[0]
 
@@ -398,7 +479,7 @@ def check_outliers(target_file, date_col_name):
         cov = data.cov().values
         m_dist = mahalanobis_dist(data, mean, cov)
 
-        plt.bar(target_file.index, m_dist, color = 'deepskyblue')
+        plt.bar(target_file.index, m_dist, color='deepskyblue')
 
         plt.title('Mahalanobis distance')
         plt.xlabel('row index of data points')
@@ -416,6 +497,8 @@ def check_outliers(target_file, date_col_name):
             if plot_out_del_input == 'yes':
                 print('Provide row index or indices of outliers that you wish to remove.')
                 target_file = uf.del_file_data(target_file=target_file)
+                print('Data after removing outliers:', end='\n')
+                print(target_file, end='\n\n')
                 break
             elif plot_out_del_input == 'no':
                 break
@@ -426,10 +509,10 @@ def check_outliers(target_file, date_col_name):
     # 2nd running tests to find outlier
     if len(target_file.columns) == 2:
         print('In addition to scatter plot, outliers can be determined using 2 statistical methods: '
-              'Z-score and interquartile range (IQR).', end = '\n')
-        print('For your reference, normality tests will be conducted to determine if your data is normal or not.', end = '\n')
+              'Z-score and interquartile range (IQR).', end='\n')
+        print('For your reference, normality tests will be conducted to determine if your data is normal or not.', end='\n')
         uf.normal_test(target_file=target_file, date_col_name=date_col_name, alpha=0.05)
-        print('Do you wish to use either statistical methods mentioned above to identify outliers? Type yes or no', end = '\n')
+        print('Do you wish to use either statistical methods mentioned above to identify outliers? Type yes or no', end='\n')
     elif len(target_file.columns) > 2:
         print('Now, precise Mahalanobis distance can be calculated to identify outliers.', end='\n')
         print('Do you wish to do that? Type yes or no', end='\n')
@@ -442,7 +525,7 @@ def check_outliers(target_file, date_col_name):
         stat_method_dec_input = stat_method_dec_input.replace(' ', '')
         # running test in 2 variables case
         if stat_method_dec_input == 'yes' and len(target_file.columns) == 2:
-            print('Choose and type in a desired method (you may type iqr for Interquartile Range):', end = '\n')
+            print('Choose and type in a desired method (you may type iqr for Interquartile Range):', end='\n')
 
             while True:
                 outlier_method_input = ''
@@ -458,7 +541,7 @@ def check_outliers(target_file, date_col_name):
                     target_file = out_iqr(target_file, date_col_name)
                     break
                 else:
-                    print('Invalid input. Please try again.', end = '\n')
+                    print('Invalid input. Please try again.', end='\n')
             break
         # running test in more than 2 variables case
         elif stat_method_dec_input == 'yes' and len(target_file.columns) > 2:
@@ -481,83 +564,16 @@ def check_outliers(target_file, date_col_name):
 # Effects: Arrange data based on content of target_col_name in the order smallest to greatest or oldest to newest.
 # Example: if target_col_name = 'Date', then this function arranges file based on dates, where the oldest date
 # comes first.
-def arrange_file_date(target_file, target_col_name):
+def arrange_file(target_file, target_col_name):
     sorted_file = target_file.sort_values(by=[target_col_name])
 
     sorted_file.reset_index(drop=True, inplace=True)
 
-    print('Data after arranging data by date: ', end = '\n')
+    print('Arranging file...', end='\n')
+    print('Data after arranging data by ', target_col_name, ':', sep='', end='\n')
     print(sorted_file)
 
     return sorted_file
-
-#----------------------------------------------------------------------------------------------------------------------------------------------
-
-# Requires: none
-# Modifies: Possibly target_file.
-# Effects: 1st, check for duplicates that have the same value throughout all columns and remove one them right away.
-#
-#          2nd, check for duplicates that have the same data value, then gives a chance to th user regarding removing
-#          one of them.
-def check_duplicates(target_file, date_col_name):
-    print('Checking for duplicates:', end = '\n')
-
-    # 1st dealing with duplicates that have the same value throughout all columns
-    all_val_dup = target_file.duplicated()
-    all_val_dup_index = []
-    no_all_val_dup_indicator = False
-
-    # obtaining row index for duplicates.
-    for i in range(0, len(all_val_dup)):
-        if all_val_dup[i]:
-            all_val_dup_index.append(i)
-
-    # removing duplicates
-    if any(all_val_dup): # if there exists at least one True in all_val_dup
-        print('Exact duplicates: ', end = '\n')
-        print(target_file[all_val_dup], end = '\n')
-        print('All duplicates above will be removed', end = '\n')
-        target_file.drop(index=all_val_dup_index, inplace=True)
-        target_file.reset_index(drop=True, inplace=True)
-
-        print('Data after taking care of exact duplicates:', end='\n')
-        print(target_file)
-    else:
-        no_all_val_dup_indicator = True
-
-    # 2nd dealing with duplicates that has the same date.
-    date_val_dup = target_file[date_col_name].duplicated(keep=False)  # keep = False since I wish to display all
-    no_date_val_dup_indicator = False                                 # duplicated data in this case.
-
-    # giving user the choice to deal with data that has the same date if it exists
-    if any(date_val_dup):
-        print('Date duplicates: ', end='\n')
-        print(target_file[date_val_dup], end = '\n')
-        print('Do you wish to remove any duplicated data above? Type yes or no.', end = '\n')
-        while True:
-            date_dup_remove_input = ''
-            del date_dup_remove_input
-            date_dup_remove_input = input()
-            date_dup_remove_input = date_dup_remove_input.replace(' ', '').lower()
-            if date_dup_remove_input == 'yes':
-                print('Type in row index of data that you wish to remove', end = '\n')
-                target_file = uf.del_file_data(target_file=target_file)
-                target_file.reset_index(drop=True, inplace=True)
-
-                print('Data after taking care of date duplicates:', end='\n')
-                print(target_file)
-                break
-            elif date_dup_remove_input == 'no':
-                break
-            else:
-                print('Invalid input. Type again.', end = '\n')
-    else:
-        no_date_val_dup_indicator = True
-
-    if no_all_val_dup_indicator and no_date_val_dup_indicator:
-        print('No duplicates in this data.', end = '\n')
-
-    return target_file
 
 #----------------------------------------------------------------------------------------------------------------------------------------------
 # Normalizing data
@@ -592,7 +608,7 @@ def normalize_z_score(target_file, date_col_name):
     # dropping date column before normalizing since it shouldn't be normalized
     target_file = target_file.drop(date_col_name, axis=1)
 
-    target_file = pd.DataFrame(scaler.fit_transform(target_file), columns = target_file.columns)
+    target_file = pd.DataFrame(scaler.fit_transform(target_file), columns=target_file.columns)
     # inserting back dropped date column before displaying normalized data
     target_file.insert(0, date_col_name, date_col)
 
@@ -604,12 +620,12 @@ def normalize_z_score(target_file, date_col_name):
 # Modifies: target_file.
 # Effects: Normalize data using one of 2 methods: min-max scaling and Z-score standardization. User can pick the method.
 def normalize_data(target_file, date_col_name):
-    print('Normalizing data:', end = '\n')
-    print('There are 2 methods for normalizing data: min-max scaling and Z-score standardization.', end = '\n')
+    print('Normalizing data...', end='\n')
+    print('There are 2 methods for normalizing data: min-max scaling and Z-score standardization.', end='\n')
     print('For your reference, normality tests will be conducted to determine if your data is normal or not.', end='\n')
     uf.normal_test(target_file=target_file, date_col_name=date_col_name, alpha=0.05)
-    print('Type in the method that you want to use.' , end = '\n')
-    print('Type "minmax" for min-max scaling and "zscore" for Z-score standardization', end = '\n')
+    print('Type in the method that you want to use.' , end='\n')
+    print('Type "minmax" for min-max scaling and "zscore" for Z-score standardization', end='\n')
 
     while True:
         normalize_method_input = ''
@@ -620,8 +636,8 @@ def normalize_data(target_file, date_col_name):
 
         if normalize_method_input == 'minmax':
             target_file = normalize_min_max(target_file, date_col_name)
-            print('Data after min-max normalization: ', end = '\n')
-            print(target_file, end = '\n\n')
+            print('Data after min-max normalization: ', end='\n')
+            print(target_file, end='\n\n')
             break
         elif normalize_method_input == 'zscore':
             target_file = normalize_z_score(target_file, date_col_name)
@@ -629,7 +645,7 @@ def normalize_data(target_file, date_col_name):
             print(target_file, end='\n\n')
             break
         else:
-            print('Invalid normalization method input. Type again.', end = '\n')
+            print('Invalid normalization method input. Type again.', end='\n')
 
     return target_file
 
@@ -640,7 +656,7 @@ def normalize_data(target_file, date_col_name):
 # Modifies: target_file.
 # Effects: make data stationarity through differencing.
 def convert_stationarity(target_file, date_col_name):
-    print('Converting data to stationarity:', end = '\n')
+    print('Converting data to stationarity...', end='\n')
 
     from statsmodels.tsa.stattools import adfuller
 
@@ -650,24 +666,21 @@ def convert_stationarity(target_file, date_col_name):
     station_df = pd.DataFrame(station_target_file)
     # differencing
     for i in non_date_col_list:
-        print('Augmented Dickey-Fuller (ADF) test using significant level (alpha) of 0.05: ')
         temp_data = target_file[i].copy()
         d = 0
         while True:
             adf_test_result = adfuller(temp_data.dropna(how='all'))
-            if adf_test_result[1] < 0.05:
-                # data is stationary
-                print('data is stationary at d =', d, end='\n')
+            if adf_test_result[1] < 0.05: # data is stationarity
                 break
             else:
-                # data is non stationary
                 temp_data = temp_data.diff()
                 d += 1
         station_df[i] = temp_data.dropna(how='all')
 
+    station_df = station_df.dropna(how='all')
     station_df.reset_index(drop=True, inplace=True)
     # removing Nan values that was created as a result of differencing
-    print('Checking for missing values when converting data to stationarity:', end='\n')
-    station_df = check_for_missing(station_df)
+    print('Data after stationarity conversion:', end='\n')
+    print(station_df, end='\n\n')
 
     return station_df
