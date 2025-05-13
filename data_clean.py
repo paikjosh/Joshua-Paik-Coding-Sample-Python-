@@ -29,17 +29,6 @@ def convert_input(target_file, date_col_name):
 
 
 
-# Requires: None.
-# Modifies: target_file.
-# Effects: set dates to be indices
-def dates_to_index(target_file, date_col_name):
-    target_file.set_index(target_file[date_col_name], inplace=True)
-    target_file = target_file.drop(date_col_name, axis=1)
-
-    return target_file
-
-
-
 # Requires: 1st, all date inputs should be in type datetime
 #
 #           2nd, all non-date inputs should be in type int or float
