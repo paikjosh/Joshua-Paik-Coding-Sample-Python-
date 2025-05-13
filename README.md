@@ -1,10 +1,19 @@
 # Joshua Paik Python Coding Sample
-The objective of the project was to write functions that can be used to clean and analyze different types of time series data. Being able to perform those two tasks on different types of time series data was a key to this project.
+The objective of the project was to write functions in Python that can be used to clean and analyze different types of time series data. Being able to perform those two tasks on different types of time series data was a key to this project.
 
 Descriptions of files in this repo are:
   1) File titled "data_clean.py" contains a series of codes that cleans time series data.
   2) File titled "data_analysis.py" contains a series of codes that performs time series analysis.
   3) File titled "test.py" is where I have implemented codes that are on both files described above by using sample data of "TS_sample_data_euro(Sheet1)-2.csv" and "TS_sample_data_dollar(Sheet1)-2.csv"
+
+Codes in this project utilizes multiple Python libraries, which are:
+  1) pandas
+  2) numpy
+  4) scipy
+  5) matplotlib
+  6) statsmodels
+  7) math
+  8) re
 
 I have made a Youtube video in which I run all codes in "test.py". The link to that video:
 You can also try implement functions yourself.
@@ -29,6 +38,8 @@ The idea behind this function was to first check if missing data exists in any p
 $${\color{red}check \textunderscore outliers(target \textunderscore file, \space date \textunderscore col \textunderscore name)}$$
 -----
 This function was to detect outliers. When doing this, I thought it was a good idea to first create a visual representation of data before conducting formal outlier tests. This was because I thought making visual representation was a more intuitive way of understanding the distribution of the data and how certain data points fall into that distribution. So, the purpose of this was to allow for the user to first find outliers by looking at visual representation of their data, then they can conduct formal tests if they still feel the need to do that after looking at the visual representation.
+
+Also, if target_file has more than 2 variables, this function only uses Mahalanobis distance both when graphing and conducting tests. This means it plots Mahalanobis distance as opposed to scatter plot of data and runs an outlier test using Mahalanobis distance as opposed to running Z-score or IQR tests. This choice was made because: 1st) when graphing data, creating visual representation of multivariate data other than plotting Mahalanobis distance may be difficult, especially if there are too many variables (ex: 40 variables). 2nd) when conducting outlier tests, the Z-score outlier test may not be appropriate depending on context since it assumes that all variables are independent of each other and running IQR test is simply not appropriate in multivariate cases by design of the test.
 
 Another important element of this function is when the user is deciding between Z-score and IQR tests to identify outliers, the function runs a normality test to help the user's decision. Generally, the Z-score test is ideal if data is normal and IQR test is ideal otherwise.
 
