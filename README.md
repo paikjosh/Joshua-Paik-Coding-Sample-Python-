@@ -4,7 +4,7 @@ The objective of the project was to write functions in Python that can be used t
 Descriptions of files in this repo are:
   1) File titled "data_clean.py" contains a series of codes that cleans time series data.
   2) File titled "data_analysis.py" contains a series of codes that performs time series analysis.
-  3) File titled "test.py" is where I have implemented codes that are on both files described above by using sample data of "TS_sample_data_euro(Sheet1)-2.csv" and "TS_sample_data_dollar(Sheet1)-2.csv"
+  3) File titled "test.py" is where I have implemented codes that are on both files described above by using sample data of "euro_file.csv"
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
