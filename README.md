@@ -5,7 +5,8 @@ Descriptions of files in this repo are:
   1) File titled "data_clean.py" contains functions that clean time series data.
   2) File titled "data_analysis.py" contains functions that perform time series analysis.
   3) File titled "utility_functions.py" contains utility functions used throughout "data_clean.py" and "data_analysis.py".
-  4) File titled "test.py" is where I have implemented functionss that are on both files described above by using sample data of "euro_file.csv". 
+  4) File titled "test.py" is where I have implemented functionss that are on both files described above by using sample data of "euro_file.csv".
+  5) File titled "reference" contains reference for sources that I have used for this project.
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
