@@ -20,7 +20,7 @@ def convert_input(target_file, date_col_name):
     non_date_col_list.remove(date_col_name)
 
     for i in non_date_col_list:
-        # removing all characters except for dot and numbers in columns that aren't the date column
+        # Removing all characters except for dot and numbers in columns that aren't the date column
         target_file_df[i] = target_file_df[i].replace(r'[^\d.]', '', regex=True).astype(float)
 
     target_file_df[date_col_name] = pd.to_datetime(target_file_df[date_col_name], format='%m/%d/%Y')
@@ -33,7 +33,7 @@ def convert_input(target_file, date_col_name):
 #
 #           2nd, all non-date inputs should be in type int or float
 # Modifies: target_file.
-# Effects: 1st, insert symbols and commas to financial inputs
+# Effects: 1st, insert a currency symbol and commas to data entries
 #
 #          2nd, convert datetime into specific format
 def convert_money_input_to_str(target_file, date_col_name, currency_unit):
@@ -41,8 +41,8 @@ def convert_money_input_to_str(target_file, date_col_name, currency_unit):
     non_date_col_list.remove(date_col_name)
 
     for i in non_date_col_list:
+        # Appending commas and a currency symbol to entries
         target_file[i] = target_file[i].apply(lambda x: "{:,.2f}".format(x)).astype(str).radd(currency_unit)
-        #target_file[i] = target_file[i].astype(str).radd(currency_unit)
 
     target_file[date_col_name] = target_file[date_col_name].dt.strftime('%-m/%-d/%Y')
 
@@ -55,10 +55,10 @@ def convert_money_input_to_str(target_file, date_col_name, currency_unit):
 # Modifies: Possibly target_file.
 # Effects: Checks for all missing inputs on target_file, then gives a chance for the user to remove the missing data.
 def check_for_missing(target_file):
-    # checking for missing data
+    # Checking for missing data
     print('Checking for missing data...', end='\n')
     nan_row = target_file[target_file.isnull().any(axis=1)]
-    # giving choice to remove missing inputs if they exist
+    # Giving choice to remove missing inputs if they exist
     if len(nan_row) >= 1:
         print('Row/s that contain missing value:', end='\n')
         print(nan_row)
@@ -95,11 +95,11 @@ def check_for_missing(target_file):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------
 
-# Requires: none
+# Requires: None.
 # Modifies: Possibly target_file.
-# Effects: 1st, check for duplicates that have the same value throughout all columns and remove one them right away.
+# Effects: 1st, checks for duplicates that have the same value throughout all columns and remove one them right away.
 #
-#          2nd, check for duplicates that have the same data value, then gives a chance to th user regarding removing
+#          2nd, checks for duplicates that have the same data value, then gives a chance to th user regarding removing
 #          one of them.
 def check_duplicates(target_file, date_col_name):
     print('Checking for duplicates...', end='\n')
@@ -109,12 +109,12 @@ def check_duplicates(target_file, date_col_name):
     all_val_dup_index = []
     no_all_val_dup_indicator = False
 
-    # obtaining row index for duplicates.
+    # Obtaining row index for duplicates
     for i in range(0, len(all_val_dup)):
         if all_val_dup[i]:
             all_val_dup_index.append(i)
 
-    # removing duplicates
+    # Removing duplicates
     if any(all_val_dup): # if there exists at least one True in all_val_dup
         print('Exact duplicates: ', end='\n')
         print(target_file[all_val_dup], end='\n')
@@ -131,7 +131,7 @@ def check_duplicates(target_file, date_col_name):
     date_val_dup = target_file[date_col_name].duplicated(keep=False)  # keep = False since I wish to display all
     no_date_val_dup_indicator = False                                 # duplicated data in this case.
 
-    # giving user the choice to deal with data that has the same date if it exists
+    # Giving user the choice to deal with data that has the same date if it exists
     if any(date_val_dup):
         print('Date duplicates: ', end='\n')
         print(target_file[date_val_dup], end='\n')
@@ -164,9 +164,9 @@ def check_duplicates(target_file, date_col_name):
 #----------------------------------------------------------------------------------------------------------------------------------------------
 # Checking outliers
 
-# Requires: all non-date inputs should be in type int or float
+# Requires: All non-date inputs should be in type int or float
 # Modifies: Possibly target_file.
-# Effects: Identify outliers in a data using Z-score method with threshold given by the user and give a chance to the
+# Effects: Identifies outliers in a data using Z-score method with threshold given by the user and gives a chance to the
 # user regarding removing identified outliers.
 def out_z_score(target_file, date_col_name):
     outlier_z = []
@@ -177,7 +177,7 @@ def out_z_score(target_file, date_col_name):
         'Type an absolute value of a threshold for Z-score (ex: 3 should be entered if you want threshold to be ±3).',
         end='\n')
     print('Commonly used thresholds are ±2 and ±3.', end='\n')
-    # taking user input for threshold
+    # Taking user input for threshold
     while True:
         z_threshold_input = ''
         del z_threshold_input
@@ -193,14 +193,14 @@ def out_z_score(target_file, date_col_name):
             z_score = stats.zscore(target_file[non_date_col_list])
             outlier = target_file[np.abs(z_score) > z_threshold_input]
             break
-    # appending Z-score to data
+    # Appending Z-score to data
     for i in range(0, len(outlier)):
         outlier_index = outlier.index[i]
         outlier_z.append(z_score[outlier_index])
 
     outlier = outlier.copy()
     outlier['Z-score'] = outlier_z
-    # giving user the choice to remove outliers if they exist
+    # Giving user the choice to remove outliers if they exist
     if outlier.empty == False:
         print('Outlier found using Z-score method with threshold of ±', z_threshold_input, ':', sep='', end='\n')
         print(outlier, end='\n')
@@ -236,7 +236,7 @@ def out_z_score(target_file, date_col_name):
 
 # Requires: all non-date inputs should be in type int or float
 # Modifies: Possibly target_file.
-# Effects: Identify outliers in a data using IQR method with threshold given by the user and give a chance to the
+# Effects: Identifies outliers in a data using IQR method with threshold given by the user and gives a chance to the
 # user regarding removing identified outliers.
 def out_iqr(target_file, date_col_name):
     non_date_col_list = target_file.columns.values.tolist()
@@ -249,7 +249,7 @@ def out_iqr(target_file, date_col_name):
         'Type a threshold for IQR test.',
         end='\n')
     print('Commonly used thresholds is 1.5.', end='\n')
-    # taking user input for threshold
+    # Taking user input for threshold
     while True:
         iqr_threshold_input = ''
         del iqr_threshold_input
@@ -259,7 +259,7 @@ def out_iqr(target_file, date_col_name):
             iqr_threshold_input = float(iqr_threshold_input)
         except ValueError:
             print('Invalid input. Please type a real number.', end='\n')
-        # outlier test
+        # Outlier test
         else:
             q1 = target_file[non_date_col].quantile(0.25)
             q3 = target_file[non_date_col].quantile(0.75)
@@ -272,7 +272,7 @@ def out_iqr(target_file, date_col_name):
 
             break
 
-    # giving user the choice to remove outliers if they exist
+    # Giving user the choice to remove outliers if they exist
     if outlier.empty == False:
         print('Identifying outliers IQR...', end='\n')
         print('Using threshold of ', iqr_threshold_input, ', (lower bound, upper bound) = (', lower_bound,', ', upper_bound, ').', sep='', end='\n')
@@ -338,16 +338,16 @@ def mahalanobis_dist(data, mean, cov):
 #
 #           2nd, 0 < alpha < 1
 # Modifies: Possibly target_file.
-# Effects: Determine outliers using Mahalanobis distance with threshold for Mahalanobis distance given by the user.
+# Effects: Determines outliers using Mahalanobis distance with threshold for Mahalanobis distance given by the user.
 #          Then, gives a choice to users regarding removing identified outliers.
 def out_mahalanobis_dist(target_file, date_col_name, alpha):
     data = target_file.drop(date_col_name, axis=1)
 
     mean = data.mean().values
     cov = data.cov().values
-    # calculating Mahalanobis distance
+    # Calculating Mahalanobis distance
     m_dist = mahalanobis_dist(data, mean, cov)
-    # calculating chi-square so that is can be used as a threshold if user wants to
+    # Calculating chi-square so that is can be used as a threshold if user wants to
     degree_of_freedom = data.shape[1]
     chi_square = stats.chi2.ppf(1 - alpha, degree_of_freedom)
 
@@ -356,7 +356,7 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
     print('Type a threshold for Mahalanobis Distance', end='\n')
     print('Commonly used Threshold is chi-square value, which is', chi_square, 'using significance level of',alpha, end='\n')
     print('You can type "chi2" is you want your threshold to be the chi-square value calculated above', end='\n')
-    # taking user input for threshold
+    # Taking user input for threshold
     while True:
         m_threshold_input = ''
         del m_threshold_input
@@ -368,11 +368,11 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
             m_threshold = float(m_threshold_input)
         except ValueError:
             print('Invalid input. Please type a real number.', end='\n')
-        # identifying outliers using calculated Mahalanobis distance
+        # Identifying outliers using calculated Mahalanobis distance
         else:
             outliers = data[data['Mahalanobis distance'] > m_threshold]
             break
-    # giving user the choice to remove outliers if they exist
+    # Giving user the choice to remove outliers if they exist
     if outliers.empty == False:
         print('Outlier found using mahalanobis method with threshold of', m_threshold_input, ':', sep='', end='\n')
         print(outliers, end='\n')
@@ -410,19 +410,19 @@ def out_mahalanobis_dist(target_file, date_col_name, alpha):
 #
 #           2nd, all other columns except for a column that contains data should either be in type float or int.
 # Modifies: Possibly target_file.
-# Effects: 1st, plot the data and gives a chance for the user to identify and remove outliers based
+# Effects: 1st, plots the data and gives a chance for the user to identify and remove outliers based
 #          on the plotted data. If there are 2 variables, including time variable, then this function generates
 #          scatter plot. Otherwise (i.e. more than 2 variables), it plots Mahalanobis distance.
 #
-#          2nd, run statistical tests to identify outliers, then gives a chance for the user to remove identified
+#          2nd, runs statistical tests to identify outliers, then gives a chance for the user to remove identified
 #          outliers. If there are 2 variable, including time variable, then this function runs IQR and Z-score tests
 #          to identify outliers. Otherwise, it uses Mahalanobis distance.
 def check_outliers(target_file, date_col_name):
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
 
-    # 1st plotting to get some sense of outliers
-    # plotting 2d graph when there are only 2 variables in the data
+    # 1st, plotting to get some sense of outliers.
+    # Plotting 2d graph when there are only 2 variables in the data.
     if len(target_file.columns) == 2:
 
         print('Identifying outliers...', end='\n')
@@ -456,7 +456,7 @@ def check_outliers(target_file, date_col_name):
                 break
             else:
                 print('Invalid input. Please type yes or no.')
-    # plotting Mahalanobis distance when there are more than 2 variables in the data
+    # Plotting Mahalanobis distance when there are more than 2 variables in the data
     elif len(target_file.columns) > 2:
         print('Identifying outliers:', end='\n')
         print('First, bar garph that show Mahalanobis distance of each data points is plotted on the right hand side of this screen.',
@@ -512,7 +512,7 @@ def check_outliers(target_file, date_col_name):
         stat_method_dec_input = input()
         stat_method_dec_input = stat_method_dec_input.lower()
         stat_method_dec_input = stat_method_dec_input.replace(' ', '')
-        # running test in 2 variables case
+        # Running test in 2 variables case
         if stat_method_dec_input == 'yes' and len(target_file.columns) == 2:
             print('Choose and type in a desired method (you may type iqr for Interquartile Range):', end='\n')
 
@@ -532,7 +532,7 @@ def check_outliers(target_file, date_col_name):
                 else:
                     print('Invalid input. Please try again.', end='\n')
             break
-        # running test in more than 2 variables case
+        # Running test in more than 2 variables case
         elif stat_method_dec_input == 'yes' and len(target_file.columns) > 2:
             target_file = out_mahalanobis_dist(target_file, date_col_name, 0.05)
             break
@@ -550,7 +550,7 @@ def check_outliers(target_file, date_col_name):
 
 # Requires: column that contains dates should be in type datetime.
 # Modifies: target_file.
-# Effects: Arrange data based on content of target_col_name in the order smallest to greatest or oldest to newest.
+# Effects: Arranges data based on content of target_col_name in the order smallest to greatest or oldest to newest.
 # Example: if target_col_name = 'Date', then this function arranges file based on dates, where the oldest date
 # comes first.
 def arrange_file(target_file, target_col_name):
@@ -569,17 +569,17 @@ def arrange_file(target_file, target_col_name):
 
 # Requires: All non-date inputs should be in type int or float
 # Modifies: target_file.
-# Effects: normalize data using min-max scaling
+# Effects: Normalizes data using min-max scaling
 def normalize_min_max(target_file, date_col_name):
     from sklearn.preprocessing import MinMaxScaler
 
     scaler = MinMaxScaler()
     date_col = target_file[date_col_name]
-    # dropping date column before normalizing since it shouldn't be normalized
+    # Dropping date column before normalizing since it shouldn't be normalized
     target_file = target_file.drop(date_col_name, axis=1)
 
     target_file = pd.DataFrame(scaler.fit_transform(target_file), columns=target_file.columns)
-    # inserting back dropped date column before displaying normalized data
+    # Inserting back dropped date column before displaying normalized data
     target_file.insert(0, date_col_name, date_col)
 
     return target_file
@@ -588,17 +588,17 @@ def normalize_min_max(target_file, date_col_name):
 
 # Requires: All non-date inputs should be in type int or float
 # Modifies: target_file.
-# Effects: normalize data using Z-score scaling
+# Effects: Normalizes data using Z-score scaling
 def normalize_z_score(target_file, date_col_name):
     from sklearn.preprocessing import StandardScaler
 
     scaler = StandardScaler()
     date_col = target_file[date_col_name]
-    # dropping date column before normalizing since it shouldn't be normalized
+    # Dropping date column before normalizing since it shouldn't be normalized
     target_file = target_file.drop(date_col_name, axis=1)
 
     target_file = pd.DataFrame(scaler.fit_transform(target_file), columns=target_file.columns)
-    # inserting back dropped date column before displaying normalized data
+    # Inserting back dropped date column before displaying normalized data
     target_file.insert(0, date_col_name, date_col)
 
     return target_file
@@ -607,7 +607,7 @@ def normalize_z_score(target_file, date_col_name):
 
 # Requires: All other columns except for a column that contains data should either be in type float or int.
 # Modifies: target_file.
-# Effects: Normalize data using one of 2 methods: min-max scaling and Z-score standardization. User can pick the method.
+# Effects: Normalizes data using one of 2 methods: min-max scaling and Z-score standardization. User can pick the method.
 def normalize_data(target_file, date_col_name):
     print('Normalizing data...', end='\n')
     print('There are 2 methods for normalizing data: min-max scaling and Z-score standardization.', end='\n')
@@ -643,7 +643,7 @@ def normalize_data(target_file, date_col_name):
 
 # Requires: All other columns except for a column that contains data should either be in type float or int.
 # Modifies: target_file.
-# Effects: make data stationarity through differencing.
+# Effects: Makes data stationarity through differencing.
 def convert_stationarity(target_file, date_col_name):
     print('Converting data to stationarity...', end='\n')
 
@@ -653,7 +653,7 @@ def convert_stationarity(target_file, date_col_name):
     non_date_col_list.remove(date_col_name)
     station_target_file = []
     station_df = pd.DataFrame(station_target_file)
-    # differencing
+    # Differencing
     for i in non_date_col_list:
         temp_data = target_file[i].copy()
         d = 0
@@ -668,7 +668,7 @@ def convert_stationarity(target_file, date_col_name):
 
     station_df = station_df.dropna(how='all')
     station_df.reset_index(drop=True, inplace=True)
-    # removing Nan values that was created as a result of differencing
+    # Removing Nan values that was created as a result of differencing
     print('Data after stationarity conversion:', end='\n')
     print(station_df, end='\n\n')
 
