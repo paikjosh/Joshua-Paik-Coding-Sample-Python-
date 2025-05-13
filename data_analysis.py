@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
+import math
 import utility_functions as uf
 
 
@@ -9,7 +10,7 @@ import utility_functions as uf
 # Modifies: target_file.
 # Effects: Show average and standard deviation of all columns except for the date column
 def stat_measures(target_file, target_file_name, date_col_name):
-    print('Statistical measures for ', target_file_name,':', sep='', end = '\n')
+    print('Statistical measures for ', target_file_name,':', sep='', end='\n')
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
     for i in non_date_col_list:
@@ -48,21 +49,20 @@ def arima(target_file,target_col_name, steps):
             temp_data = temp_data.diff()
             d += 1
 
-    # plotting acf and pacf to determine q and p
-    plot_pacf(target_file[target_col_name], lags=4)
+    # plotting PACF and ACF to determine q and p
+    # setting lags for PACF and ACF to be at most 50% of sample size of target_file
+    tf_lags = math.floor(0.5 * len(target_file))
+    plot_pacf(target_file[target_col_name], lags=tf_lags)
     plt.title('PACF')
     plt.xlabel('lags')
     plt.show()
-    plot_acf(target_file[target_col_name], lags=4)
+    plot_acf(target_file[target_col_name], lags=tf_lags)
     plt.title('ACF')
     plt.xlabel('lags')
     plt.show()
 
-    print('Now using PACF and ACF plotted on the right hand side, identify big spikes in each graphs.', end='\n')
-    print(
-        'Then, set p and q value equal to the value of lag in which PACF and ACF respectively experienced a big spike',
-        end='\n')
-    print('Type in p and q values below. Type p first, then q. They must be seperated by a comma', end='\n')
+    print('Now using PACF and ACF plotted on the right hand side, type in p and q values.', end='\n')
+    print('Type p first, then q. They must be seperated by a comma', end='\n')
     pdq_input = uf.input_indices()
 
     # fit ARIMA model
