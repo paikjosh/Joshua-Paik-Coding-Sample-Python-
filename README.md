@@ -1,12 +1,12 @@
 # Joshua Paik Python Coding Sample
-The objective of the project was to write functions in Python that can be used to clean and analyze different types of time series data. Being able to perform those two tasks on different types of time series data was a key to this project.
+The objective of the project was to write functions in Python that can be used to clean and analyze different types of time series data. More specifically, I have first written functions that perform the task of data cleaning, including identifying missing values, finding outliers, and normalizing data. To demonstrate functionalities of these functions, I have applied them into a sample data that I have created. Using this cleaned sample data, I have moved on to performing two basic time series analyses of autoregressive integrated moving average (ARIMA) and vector autoregression (VAR). The operation that I have described can be seen using all files attached in this repository.
 
-Descriptions of files in this repo are:
+Descriptions of files in this repository are:
   1) File titled "data_clean.py" contains functions that clean time series data.
   2) File titled "data_analysis.py" contains functions that perform time series analysis.
   3) File titled "utility_functions.py" contains utility functions used throughout "data_clean.py" and "data_analysis.py".
-  4) File titled "test.py" is where I have implemented functionss that are on both files described above by using sample data from "euro_file.csv".
-  5) File titled "reference" contains references for sources that I have used for this project.
+  4) File titled "test.py" is where I have cleaned and analyzed a sample time series data that is on "euro_file.csv" using all three files described above.
+  5) File titled "reference" contains references to sources that I have used for this project.
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
@@ -20,7 +20,7 @@ Codes in this project utilizes multiple Python libraries, which are:
 I have made a Youtube video in which I run all codes in "test.py". The link to that video:
 You can also try to implement functions yourself.
 
-All Python files in this repo as well as the video attatched above contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further.
+All Python files in this repo as well as the video attached above contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further.
 
 
 $${\color{red}convert \textunderscore data \textunderscore type(target \textunderscore file)}$$
