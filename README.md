@@ -23,7 +23,7 @@ Codes in this project utilizes multiple Python libraries, which are:
 | 7 | re |
 
 
-I have made a Youtube video in which I run all codes in "test.py".  
+I have made a Youtube video in which I run all codes in "test.py".
 The link to that video: https://youtu.be/beQ3PZZfNjg  
 You can also try to implement functions yourself.
 
