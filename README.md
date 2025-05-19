@@ -2,12 +2,6 @@
 The objective of the project was to write functions in Python that can be used to clean and analyze different types of time series data. More specifically, I have first written functions that perform the task of data cleaning, including identifying missing values, finding outliers, and normalizing data. To demonstrate functionalities of these functions, I have applied them into a sample data that I have created. Using this cleaned sample data, I have moved on to performing two basic time series analyses of autoregressive integrated moving average (ARIMA) and vector autoregression (VAR). The operation that I have described can be seen using all files attached in this repository.
 
 Descriptions of files in this repository are:
-  1) File titled "data_clean.py" contains functions that clean time series data.
-  2) File titled "data_analysis.py" contains functions that perform time series analysis.
-  3) File titled "utility_functions.py" contains utility functions used throughout "data_clean.py" and "data_analysis.py".
-  4) File titled "test.py" is where I have cleaned and analyzed a sample time series data that is on "euro_file.csv" using all three files described above.
-  5) File titled "reference" contains references to sources that I have used for this project.
-
 | File Name | Description |
 | --- | --- |
 | "data_clean.py" | Contains functions that clean time series data |
