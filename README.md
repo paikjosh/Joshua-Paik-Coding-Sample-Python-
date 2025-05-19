@@ -25,7 +25,6 @@ Codes in this project utilizes multiple Python libraries, which are:
 
 I have made a Youtube video in which I run all codes in "test.py". 
 The link to that video: https://youtu.be/beQ3PZZfNjg
-
 You can also try to implement functions yourself.
 
 All Python files in this repo as well as the video attached above contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further.
