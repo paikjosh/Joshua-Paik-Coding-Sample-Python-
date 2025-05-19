@@ -8,9 +8,10 @@ Descriptions of files in this repository are:
   4) File titled "test.py" is where I have cleaned and analyzed a sample time series data that is on "euro_file.csv" using all three files described above.
   5) File titled "reference" contains references to sources that I have used for this project.
 
-Attempt | #1 | #2
---- | --- |
-Name | clean | ana
+| File Name | Description |
+| --- | --- |
+| 'data_clean.py' | clean
+
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
