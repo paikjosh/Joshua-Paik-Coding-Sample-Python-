@@ -12,14 +12,6 @@ Descriptions of files in this repository are:
 
 
 Codes in this project utilizes multiple Python libraries, which are:
-  1) pandas
-  2) numpy
-  4) scipy
-  5) matplotlib
-  6) statsmodels
-  7) math
-  8) re
-
 |  | Name |
 | --- | --- |
 | 1 | pandas |
@@ -29,6 +21,7 @@ Codes in this project utilizes multiple Python libraries, which are:
 | 5 | statsmodels |
 | 6 | math |
 | 7 | re |
+
 
 I have made a Youtube video in which I run all codes in "test.py". The link to that video:
 You can also try to implement functions yourself.
