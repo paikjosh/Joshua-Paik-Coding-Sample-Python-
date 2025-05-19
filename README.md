@@ -10,6 +10,7 @@ Descriptions of files in this repository are:
 | test.py | Cleans and analyzes a sample time series data that is on "euro_file.csv" using all three files described above |
 | reference | Contains references to sources that I have used for this project |
 
+
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
   2) numpy
@@ -18,6 +19,8 @@ Codes in this project utilizes multiple Python libraries, which are:
   6) statsmodels
   7) math
   8) re
+
+| 1 | pandas |
 
 I have made a Youtube video in which I run all codes in "test.py". The link to that video:
 You can also try to implement functions yourself.
