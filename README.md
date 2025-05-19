@@ -5,8 +5,8 @@ Descriptions of files in this repo are:
   1) File titled "data_clean.py" contains functions that clean time series data.
   2) File titled "data_analysis.py" contains functions that perform time series analysis.
   3) File titled "utility_functions.py" contains utility functions used throughout "data_clean.py" and "data_analysis.py".
-  4) File titled "test.py" is where I have implemented functionss that are on both files described above by using sample data of "euro_file.csv".
-  5) File titled "reference" contains reference for sources that I have used for this project.
+  4) File titled "test.py" is where I have implemented functionss that are on both files described above by using sample data from "euro_file.csv".
+  5) File titled "reference" contains references for sources that I have used for this project.
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
@@ -18,9 +18,9 @@ Codes in this project utilizes multiple Python libraries, which are:
   8) re
 
 I have made a Youtube video in which I run all codes in "test.py". The link to that video:
-You can also try implement functions yourself.
+You can also try to implement functions yourself.
 
-All Python files in this repo contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further about.
+All Python files in this repo as well as the video attatched above contain descriptions of functions that I’ve written. However, all of them lack my thought process that went into writing those functions. Hence, I’ll use the space below to talk about that. I will only cover important, and perhaps complicated, functions that I feel the need to talk further.
 
 
 $${\color{red}convert \textunderscore data \textunderscore type(target \textunderscore file)}$$
@@ -43,7 +43,7 @@ This function was to detect outliers. When doing this, I thought it was a good i
 
 Also, if target_file has more than 2 variables, this function only uses Mahalanobis distance both when graphing and conducting tests. This means it plots Mahalanobis distance as opposed to scatter plot of data and runs an outlier test using Mahalanobis distance as opposed to running Z-score or IQR tests. This choice was made because: 1st) when graphing data, creating visual representation of multivariate data other than plotting Mahalanobis distance may be difficult, especially if there are too many variables (ex: 40 variables). 2nd) when conducting outlier tests, the Z-score outlier test may not be appropriate depending on context since it assumes that all variables are independent of each other and running IQR test is simply not appropriate in multivariate cases by design of the test.
 
-Another important element of this function is when the user is deciding between Z-score and IQR tests to identify outliers, the function runs a normality test to help the user's decision. Generally, the Z-score test is ideal if data is normal and IQR test is ideal otherwise.
+Another important element of this function is when the user is deciding between Z-score and IQR tests to identify outliers, the function runs a normality test to help the user's decision. Generally, the user would choose a Z-score if their data is normal and choose IQR otherwise.
 
 Final part of this function that I want to highlight is that it lets the user decide their own threshold for running all outlier tests. I felt that this was necessary since the ideal threshold when running outlier tests varies by context. However, for all tests, I have written a typical threshold used.
 
