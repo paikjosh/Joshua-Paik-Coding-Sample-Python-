@@ -20,6 +20,8 @@ Codes in this project utilizes multiple Python libraries, which are:
   7) math
   8) re
 
+| | |
+| --- | --- |
 | 1 | pandas |
 
 I have made a Youtube video in which I run all codes in "test.py". The link to that video:
