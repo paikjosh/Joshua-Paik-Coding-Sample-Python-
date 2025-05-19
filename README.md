@@ -4,11 +4,11 @@ The objective of the project was to write functions in Python that can be used t
 Descriptions of files in this repository are:
 | File Name | Description |
 | --- | --- |
-| 'data_clean.py' | Contains functions that clean time series data |
-| "data_analysis.py" | Contains functions that perform time series analysis |
-| "utility_functions.py" | Contains utility functions used throughout "data_clean.py" and "data_analysis.py" |
-| "test.py" | Cleans and analyzes a sample time series data that is on "euro_file.csv" using all three files described above |
-| "reference" | Contains references to sources that I have used for this project |
+| data_clean.py | Contains functions that clean time series data |
+| data_analysis.py | Contains functions that perform time series analysis |
+| utility_functions.py | Contains utility functions used throughout "data_clean.py" and "data_analysis.py" |
+| test.py | Cleans and analyzes a sample time series data that is on "euro_file.csv" using all three files described above |
+| reference | Contains references to sources that I have used for this project |
 
 Codes in this project utilizes multiple Python libraries, which are:
   1) pandas
