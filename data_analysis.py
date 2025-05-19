@@ -8,17 +8,20 @@ import utility_functions as uf
 
 # Requires: All other columns except for a column that contains data should either be in type float or int.
 # Modifies: target_file.
-# Effects: Shows average and standard deviation of all columns except for the date column
+# Effects: Shows number of entries, average, standard deviation, min, and max of all columns except for the date column
 def stat_measures(target_file, target_file_name, date_col_name):
     print('Statistical measures for ', target_file_name,':', sep='', end='\n')
     non_date_col_list = target_file.columns.values.tolist()
     non_date_col_list.remove(date_col_name)
     for i in non_date_col_list:
+        N = len(target_file[i])
         average = target_file[i].mean()
         std = target_file[i].std()
+        min = target_file[i].min()
+        max = target_file[i].max()
 
-        print('For', i, 'column:','[average: ',average,', std:',std,']', end='\n')
-
+        print('For', i, 'column:','[Number of entries = ', N,', Average = ',average,', STD = ',std,', Min = ',min,', Max = ', max,']', end='\n')
+        
 
 # -----------------------------------------------------------------------------------------------------------------------------
 # Building autoregressive integrated moving average (ARIMA)
