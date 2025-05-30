@@ -39,7 +39,7 @@ Note that this function first converts target_file into dataframe. This action w
 In addition, note that this function converts some integers into type float. Of course, this isn’t the best practice since doing that decreases the computing efficiency. However, I have made this choice because when performing certain analysis, inputs may have to be in type float.
 
 
-$${\color{red}check \textunderscore for \textunderscore missing(target \textunderscore file)}$$
+check_for_missing(target_file)
 -----
 The idea behind this function was to first check if missing data exists in any parts of the data, then give the user a chance to delete identified missing values. Giving the user a choice to deal with missing values is an important part of this function since removing missing values might not be the best way to deal with them. For example, if one can reasonably assume that a value is missing at random (MAR), then it is a good idea to perform an imputation to deal with that missing value.
 
